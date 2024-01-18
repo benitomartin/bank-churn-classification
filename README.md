@@ -1,7 +1,7 @@
 ﻿# BANK CHURN CLASIFFICATION 🗞️
 
 <p align="center">
-    <img src="images/cover.png" width="500" height="400"/>
+    <img src="images/bank.png"/>
 </p>
 
 This repository hosts a notebook featuring an in-depth analysis of a **binary classification** with a bank churn dataset. The notebook contains the following structure
@@ -31,7 +31,7 @@ The dataset used has been downloaded from the this [Kaggle](https://www.kaggle.c
 
 The first step of the project involved a comprehensive analysis of the dataset, including its columns and distribution. The idea was to identify correlations, outliers and the need to perform feature engineering. 
 
-The dataset contains ten real-valued features  that are computed for each cell nucleus:
+The train dataset contains information on bank customers who either left the bank or continue to be a customer (target column Exited). There are in total 14 columns, mostly numerical with 3 categorical columns:
 
 - `CustomerId`: A unique identifier for each customer
 
@@ -58,69 +58,80 @@ The dataset contains ten real-valued features  that are computed for each cell n
 - `EstimatedSalary`: The estimated salary of the customer
 
 - `Exited`: Whether the customer has churned (1 = yes, 0 = no)
-- 
 
-The **mean**, **standard error** and **worst** or largest (mean of the three largest values) of these features were computed for each image, resulting in 30 features and additionally the target (Diagnosis: Malignant or Benign).
 
 ### Labels Distribution
 
-It became apparent that the labels are not well-balanced, representing malignant only 37% of the samples. This means that oversampling or undersampling might be required. The dataset initially contained:
-
-- Number of Benign:  357
-- Number of Malignant :  212
+The labels distribution showed that the target variable is not well-balanced, representing churn rate only 21% of the samples. This required to set a threshold on the modelling in order to avoid too many FN and FP.
 
 <p align="center">
-    <img src="images/counts.png" width="700" height="500"/>
+    <img src="images/distribution.png" width="400" height="400"/>
 </p>
 
 ### Features Distribution
-The feature distribution revealed a significanT amount of outliers in all features except on the concave points worst feature. Also, all features are right skewed. This means that feature scaling can improve the models.
-
-</p>
-<p align="center">
-    <img src="images/violin.png"/>
-</p>
+The feature distribution revealed that `CreditScore` and `Age` showed a significant amount of outliers and 50 % of the clients had a `Balance`, which represents the amount of money in the account, of 0. 
 
 <p align="center">
-    <img src="images/swarm.png"/>
+    <img src="images/credit_outliers.png"/>
 </p>
 
 <p align="center">
-    <img src="images/box.png"/>
+    <img src="images/age_outliers.png"/>
 </p>
 
 <p align="center">
-    <img src="images/skewness.png" width="700" height="500"/>
+    <img src="images/balance_outliers.png"/>
 </p>
 
-It can be seen that some features like concavity_mean are well separated, which is good for classification purposes. Others like symmetry_worst are not separated, as the distribution of Benign and Malignant is similar.
+People with 3 and 4 products show the higher churn rate with 88 %, but it only represents 2 % of the clients. On the other hand people with only 1 product have the higher churn rate specific weight as it accounts for 46 % of all churns and 34 % within it distribution group.
+
+People with 2 products only churn by 6 %, representing the most estable group.
+
+<p align="center">
+    <img src="images/nr_products.png"/>
+</p>
 
 ### Correlation
 
-In general, all measurement metrics show high correlation, like perimeter, area or radius. Also, concavity, fractal dimension and concave correlate to each other. In contrary, symmetry or smoothness, do not show any correlation with any feature.
+`Age`, `NumOfProducts`, `Balance` and `isActiveMember` are the only ones correlated with the target, Although the correlation, 0.34 for age is not very high. This means that we will have to perform feature selection to chose the best features for our model.
 
 <p align="center">
     <img src="images/corr.png"/>
 </p>
 
-<p align="center">
-    <img src="images/wordcloud.png"/>
-</p>
-
 ## Feature Engineering
 
-Two approaches were selected for feature engineering:
+Due to the fact that the majority of the data are not simetrically distributed or showed a classification distribution the following new features were created:
 
-- Scaling; Robust, Standard, MinMax
-- PCA and KMeans
+- `Age_Category`: grouping `Age` in bins of 5 years
+- `Salary_Category`: grouping `EstimatedSalary` in bins of 10'000 USD
+- `Balance_Class`: creating a category (0,1), whether it has money in the account or not
+- `Geo_Gender`: grouping `Geography` with Gender
 
-The scaling was performed depending on the distribution and skewness of the features. PCA and KMeans served as an intuition to see if reducing the number of features is significant.
+Afterwards mainly two metodologies were used to check the feature importance for specific models.-
+
+-  **Mutual Info Classification**: This method basically utilizes mutual information. It calculates the mutual information value for each of the independent variables with respect to the dependent variable and selects the ones which have the most information gain. In other words, it basically measures the dependency of features with the target value. A higher score means more dependent variables.
+
+- **Feature Importance from Models**: classiffication models have a function that allow to extract the feature importances once the model has been fitted. This was tried out with Random Forest, CatBoost and LightGBM.
+
+^SelectFromModel` function from sklearn was also tested but this mainly has the same attributes as the feature selection function from the models.
+
+Adding additional features to the dataset, like combining geography with gender, or grouping the age every 5 years, has shown that by performing feature importance, some of these features are on the top 10 features for specific models, like Geography_Germany or Age_Category_48_52
 
 <p align="center">
-    <img src="images/pc.png"/>
+    <img src="images/mutual.png"/>
 </p>
 
-Oversampling and undersampling was not selected as feature engineering as later the models showed very good results.
+
+<p align="center">
+    <img src="images/lightfeat.png"/>
+</p>
+
+
+<p align="center">
+    <img src="images/cat.png"/>
+</p>
+
 
 ## 👨‍🔬 Modeling
 
