@@ -1,4 +1,4 @@
-﻿# BANK CHURN CLASIFFICATION 🗞️
+﻿# BANK CHURN CLASSIFICATION 🗞️
 
 <p align="center">
     <img src="images/bank.png"/>
@@ -14,7 +14,7 @@ This repository hosts a notebook featuring an in-depth analysis of a **binary cl
 - Baseline Model: LGBMClassifier
 - VotingClassifier: LGBMClassifier, XGBoostClassifier, and CatBoostClassifier
 
-The dataset used has been downloaded from the this [Kaggle](https://www.kaggle.com/competitions/playground-series-s4e1/data) competition.
+The dataset used has been downloaded from this [Kaggle](https://www.kaggle.com/competitions/playground-series-s4e1/data) competition.
 
 ## 👨‍💻 **Tech Stack**
 
@@ -27,6 +27,28 @@ The dataset used has been downloaded from the this [Kaggle](https://www.kaggle.c
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-%23d9ead3.svg?style=for-the-badge&logo=Matplotlib&logoColor=black)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 
+## 📄 **Executive Summary**
+
+The dataset used for this project contains around 165'000 values with few duplicates and no missing data, which makes it easy to handle. Three features (`id`, `Surname`, `CustomerId`) have been considered as irrelevant, as they only contain unique values in each column and no correlation can be found with the target feature (`Exited`)
+
+Only the credit score and the age of the people show outliers, mainly people with low credit score and people older than 60. It is also interesting that around half of the people do not have money (Balance) in their account, which makes the distribution unbalanced, also considering that only **21 % of the people has churned**. This has required some feature engineering and preprocessing. 
+
+The group that tends to churn more are people from germany, non active members, women, people with more than 2 products and older people. For the geographical and gender feature it was decided to create an additional feature combining both, which has increased the correlation with the target, especially considering that the highest pearson correlation can be seen in the age (0.34) and it is not very high. However the **age, number of products and active membership has remain as the most important features for the models**.
+
+For the models, an **AUC of 0.89** was achieved, combining **CatBoost**, **XGBoost** and **LightGBM**, being this three the ones that alone showed the best performance. 
+
+<u><b>Future Improvements:</b></u>
+
+- Feature extraction ha shown to increase the correlation with the churn. The balance feature, which represent the money the people have in the account in unbalanced. A possibility that can be explored is to create an additional feature with balance as binary (money or not money)
+
+- Adding more data of people who churned can be also helpful as oversampling would oly overfit the model adding duplicated features and undersampling would reduce the data to 20% of the original data.
+
+- Trying other models or hyperparameter tuning can be also helpful to get better results. However, a GridSearch over LightGBM was carried out and no improvements could be seen. 
+
+- Better analyzing the feature importance using permutancion importance or SHAP
+
+- Eliminating features that can lead to an AUC reduction
+  
 ## 👨‍🔬 Exploratory Data Analysis
 
 The first step of the project involved a comprehensive analysis of the dataset, including its columns and distribution. The idea was to identify correlations, outliers and the need to perform feature engineering. 
@@ -60,15 +82,15 @@ The train dataset contains information on bank customers who either left the ban
 - `Exited`: Whether the customer has churned (1 = yes, 0 = no)
 
 
-### Labels Distribution
+### 📊 Labels Distribution
 
-The labels distribution showed that the target variable is not well-balanced, representing churn rate only 21% of the samples. This required to set a threshold on the modelling in order to avoid too many FN and FP.
+The labels distribution showed that the target variable is not well-balanced, representing churn rate only 21% of the samples. This required to set a threshold on the modelling in order to avoid too many FN and FP. Oversampling was tested and led to overfitting, because the samples created were duplicates and undersampling did not improved the model performance.
 
 <p align="center">
     <img src="images/distribution.png" width="400" height="400"/>
 </p>
 
-### Features Distribution
+### 📈 Features Distribution
 The feature distribution revealed that `CreditScore` and `Age` showed a significant amount of outliers and 50 % of the clients had a `Balance`, which represents the amount of money in the account, of 0. 
 
 <p align="center">
@@ -91,15 +113,15 @@ People with 2 products only churn by 6 %, representing the most estable group.
     <img src="images/nr_products.png"/>
 </p>
 
-### Correlation
+### 🔢 Correlation
 
-`Age`, `NumOfProducts`, `Balance` and `isActiveMember` are the only ones correlated with the target, Although the correlation, 0.34 for age is not very high. This means that we will have to perform feature selection to chose the best features for our model.
+`Age`, `NumOfProducts`, `Balance` and `isActiveMember` are the only ones correlated with the target, although the correlation, 0.34 for age is not very high. This meant that we performed feature engineering to identify the most impactful features for the models.
 
 <p align="center">
     <img src="images/corr.png"/>
 </p>
 
-## Feature Engineering
+## 📳 Feature Engineering
 
 Due to the fact that the majority of the data are not simetrically distributed or showed a classification distribution the following new features were created:
 
@@ -133,20 +155,26 @@ Adding additional features to the dataset, like combining geography with gender,
 </p>
 
 
-## 👨‍🔬 Modeling
+## 🪙 Modeling
 
-The project involved training 4 models with varying configurations using Spark, Sklearn and feature engineering. All models showed very good performances with and without feature engineering (scaling and feature selection). The results are summarized below (confusion matrix belong to the baseline model Sklearn Random Forest):
+In order to train the models some preprocessing steps in our features was performed, mainly:
+
+- RobustScaler on the numerical features with outliers
+- MinMaxScaler on the other numerical features
+- OneHotEncode on the categorical features
+
+The modeling involved training 6 models ("RandomForestClassifier", "AdaBoostClassifier", "GradientBoostingClassifier", "XGBoostClassifier", "LGBMClassifier", "CatBoostClassifier"). All models showed very good performances with and without feature engineering above 0.87 AUC (metric used for the competition). The best performing model was LGBMClassifier with an AUC of 0.88939. 
 
 <p align="center">
-    <img src="images/cm.png"/>
+    <img src="images/fnfp.png" width="700" height="600"/>
 </p>
 
-- Sklearn Random Forest: 96 % and only 4 false negatives
-- Sklearn Random Forest + Feature Selection: 94 % and only 6 false negatives
-- Spark Random Forest: 97% and only 4 false positives
-- Spark Random Forest + Feature Selection: 93% and only 9 false positives and 2 false negatives
+<p align="center">
+    <img src="images/auc.png" width="700" height="550"/>
+</p>
 
+A grid search over the LightGBM was carried out which did not provided a significant improvement. Afterwards a VotingClassifier ("XGBoostClassifier", "LGBMClassifier", "CatBoostClassifier") was performed, which led to an increase of the AUC to 0.8905
 
-### Model Performance Evaluation
+### 🥇 Model Performance Evaluation
 
-All models demonstrated impressive performance, consistently achieving high accuracies, frequently surpassing the 90% mark and low amount of FN/FP. 
+All models demonstrated impressive performance, consistently achieving high AUC. Considering that the best model in the competition achieved an AUC of 0.9, the possibilities of improvement are not very wide. 
