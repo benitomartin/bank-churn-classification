@@ -114,7 +114,7 @@ Afterwards mainly two metodologies were used to check the feature importance for
 
 - **Feature Importance from Models**: classiffication models have a function that allow to extract the feature importances once the model has been fitted. This was tried out with Random Forest, CatBoost and LightGBM.
 
-^SelectFromModel` function from sklearn was also tested but this mainly has the same attributes as the feature selection function from the models.
+`SelectFromModel` function from sklearn was also tested but this mainly has the same attributes as the feature selection function from the models.
 
 Adding additional features to the dataset, like combining geography with gender, or grouping the age every 5 years, has shown that by performing feature importance, some of these features are on the top 10 features for specific models, like Geography_Germany or Age_Category_48_52
 
