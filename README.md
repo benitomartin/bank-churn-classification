@@ -33,7 +33,7 @@ The dataset used for this project contains around 165'000 values with few duplic
 
 Only the credit score and the age of the people show outliers, mainly people with low credit score and people older than 60. It is also interesting that around half of the people do not have money (Balance) in their account, which makes the distribution unbalanced, also considering that only **21 % of the people has churned**. This has required some feature engineering and preprocessing. 
 
-The group that tends to churn more are people from germany, non active members, women, people with more than 2 products and older people. For the geographical and gender feature it was decided to create an additional feature combining both, which has increased the correlation with the target, especially considering that the highest pearson correlation can be seen in the age (0.34) and it is not very high. However the **age, number of products and active membership has remain as the most important features for the models**.
+The group that tends to churn more are people from Germany, non active members, women, people with more than 2 products and older people. For the geographical and gender feature it was decided to create an additional feature combining both, which has increased the correlation with the target, especially considering that the highest Pearson correlation can be seen in the age (0.34) and it is not very high. However, the **age, number of products and active membership has remain as the most important features for the models**.
 
 For the models, an **AUC of 0.89** was achieved, combining **CatBoost**, **XGBoost** and **LightGBM**, being this three the ones that alone showed the best performance. 
 
@@ -45,8 +45,8 @@ For the models, an **AUC of 0.89** was achieved, combining **CatBoost**, **XGBoo
 
 - Trying other models or hyperparameter tuning can be also helpful to get better results. However, a GridSearch over LightGBM was carried out and no improvements could be seen. 
 
-- Better analyzing the feature importance using permutancion importance or SHAP
-
+- Better analysing the feature importance using permutation importance or SHAP
+  
 - Eliminating features that can lead to an AUC reduction
   
 ## 👨‍🔬 Exploratory Data Analysis
@@ -107,7 +107,7 @@ The feature distribution revealed that `CreditScore` and `Age` showed a signific
 
 People with 3 and 4 products show the higher churn rate with 88 %, but it only represents 2 % of the clients. On the other hand people with only 1 product have the higher churn rate specific weight as it accounts for 46 % of all churns and 34 % within it distribution group.
 
-People with 2 products only churn by 6 %, representing the most estable group.
+People with 2 products only churn by 6 %, representing the most stable group.
 
 <p align="center">
     <img src="images/nr_products.png"/>
@@ -123,18 +123,18 @@ People with 2 products only churn by 6 %, representing the most estable group.
 
 ## 📳 Feature Engineering
 
-Due to the fact that the majority of the data are not simetrically distributed or showed a classification distribution the following new features were created:
+Due to the fact that the majority of the data are not symmetrically distributed or showed a classification distribution the following new features were created:
 
 - `Age_Category`: grouping `Age` in bins of 5 years
 - `Salary_Category`: grouping `EstimatedSalary` in bins of 10'000 USD
 - `Balance_Class`: creating a category (0,1), whether it has money in the account or not
 - `Geo_Gender`: grouping `Geography` with Gender
 
-Afterwards mainly two metodologies were used to check the feature importance for specific models.-
+Afterwards mainly two methodologies were used to check the feature importance for specific models:
 
 -  **Mutual Info Classification**: This method basically utilizes mutual information. It calculates the mutual information value for each of the independent variables with respect to the dependent variable and selects the ones which have the most information gain. In other words, it basically measures the dependency of features with the target value. A higher score means more dependent variables.
 
-- **Feature Importance from Models**: classiffication models have a function that allow to extract the feature importances once the model has been fitted. This was tried out with Random Forest, CatBoost and LightGBM.
+- **Feature Importance from Models**: classification models have a function that allow to extract the feature importances once the model has been fitted. This was tried out with Random Forest, CatBoost and LightGBM.
 
 `SelectFromModel` function from sklearn was also tested but this mainly has the same attributes as the feature selection function from the models.
 
