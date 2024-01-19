@@ -39,7 +39,7 @@ For the models, an **AUC of 0.89** was achieved, combining **CatBoost**, **XGBoo
 
 <u><b>Future Improvements:</b></u>
 
-- Feature extraction ha shown to increase the correlation with the churn. The balance feature, which represent the money the people have in the account in unbalanced. A possibility that can be explored is to create an additional feature with balance as binary (money or not money)
+- Feature extraction has shown to increase the correlation with the churn. This possibility can be further explored and create an additional features.
 
 - Adding more data of people who churned can be also helpful as oversampling would oly overfit the model adding duplicated features and undersampling would reduce the data to 20% of the original data.
 
