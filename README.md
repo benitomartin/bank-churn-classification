@@ -39,7 +39,7 @@ For the models, an **AUC of 0.89** was achieved, combining **CatBoost**, **XGBoo
 
 <u><b>Future Improvements:</b></u>
 
-- Feature extraction has shown to increase the correlation with the churn. This possibility can be further explored and create an additional features.
+- Feature extraction has shown to increase the correlation with the churn. This possibility can be further explored and create additional features.
 
 - Adding more data of people who churned can be also helpful as oversampling would oly overfit the model adding duplicated features and undersampling would reduce the data to 20% of the original data.
 
