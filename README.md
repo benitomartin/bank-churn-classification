@@ -14,7 +14,7 @@ This repository hosts a notebook featuring an in-depth analysis of a **binary cl
 - Baseline Model: LGBMClassifier
 - VotingClassifier: LGBMClassifier, XGBoostClassifier, and CatBoostClassifier
 
-The dataset used has been downloaded from this [Kaggle](https://www.kaggle.com/competitions/playground-series-s4e1/data) competition.
+The dataset used has been downloaded from this [Kaggle](https://www.kaggle.com/competitions/playground-series-s4e1/data) competition. Feel free to ⭐ and clone this repo 😉
 
 ## 👨‍💻 **Tech Stack**
 
